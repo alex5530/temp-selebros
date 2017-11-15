@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- [y] hybris Platform Copyright (c) 2000-2015 hybris AG All rights reserved. 
+	This software is the confidential and proprietary information of hybris ("Confidential 
+	Information"). You shall not disclose such Confidential Information and shall 
+	use it only in accordance with the terms of the license agreement you entered 
+	into with hybris. -->
+<!-- ATTENTION: This is just an example file. You have to edit it according 
+	to your needs. -->
+
+<items xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="items.xsd">
+
+	<relations>
+		<relation code="CelebrosExportToIndexAttribute" generate="true"
+			localized="false" autocreate="true">
+			<description>This relation links Celebros index attributes to the export</description>
+			<sourceElement qualifier="customAttributes" type="CelebrosIndexAttribute"
+				cardinality="many" collectiontype="list">
+				<modifiers read="true" write="true" search="true"
+					optional="true" />
+			</sourceElement>
+			<targetElement qualifier="exportCronjob" type="CelebrosExportCronjob"
+				cardinality="one">
+				<modifiers read="true" write="true" search="true"
+					optional="true" />
+			</targetElement>
+		</relation>
+	</relations>
+
+	<itemtypes>
+
+		<itemtype generate="true" code="CelebrosIndexAttribute"
+			autocreate="true">
+			<deployment table="celebrosIndexAttribute" typecode="10000" />
+			<attributes>
+				<attribute qualifier="attributeName" type="java.lang.String">
+					<description>Name of attribute to index</description>
+					<persistence type="property" />
+					<modifiers unique="false" optional="false" />
+				</attribute>
+				<attribute qualifier="valueProviderBean" type="java.lang.String">
+					<description>Value Provider to use to index attribute</description>
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="valueProviderParameter" type="java.lang.String">
+					<description>Parameter to pass the value provider</description>
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="lookupTable" type="java.lang.Boolean">
+					<description>Whether to index this attribute to a lookup table</description>
+					<persistence type="property" />
+					<modifiers unique="false" optional="false" initial="false" />
+				</attribute>
+				<attribute qualifier="localized" type="java.lang.Boolean">
+					<description>Whether this attribute is localized</description>
+					<persistence type="property" />
+					<modifiers unique="false" optional="false" initial="false" />
+				</attribute>
+				<attribute qualifier="enabled" type="java.lang.Boolean">
+					<description>Whether to index this attribute</description>
+					<persistence type="property" />
+					<modifiers unique="false" optional="false" initial="false" />
+				</attribute>
+				<attribute qualifier="classAttributeAssignment" type="ClassAttributeAssignment">
+					<description>The classification system category feature for this property.</description>
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype generate="true" code="CelebrosExportCronjob"
+			autocreate="true" extends="Cronjob">
+			<attributes>
+				<attribute qualifier="productType" type="ComposedType">
+					<description>Subtype of Product to be indexed</description>
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="site" type="CMSSite">
+					<description>The Site to be indexed</description>
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="imageBaseUrl" type="java.lang.String">
+					<description>The base url of the site to be used for image links</description>
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="baseUrl" type="java.lang.String">
+					<description>The base url of the site to be used for product links</description>
+					<persistence type="property" />
+				</attribute>
+				<!-- Upload Attributes -->
+				<attribute qualifier="remoteHost" type="java.lang.String">
+					<description>Remote host for FTP</description>
+					<persistence type="property" />
+					<modifiers optional="false"/>
+				</attribute>
+				<attribute qualifier="remotePort" type="java.lang.Integer">
+					<description>Remote port for FTP</description>
+					<persistence type="property" />
+					<defaultvalue>21</defaultvalue>
+					<modifiers optional="false"/>
+				</attribute>
+				<attribute qualifier="remoteLocation" type="java.lang.String">
+					<description>Remote location for FTP</description>
+					<persistence type="property" />
+					<defaultvalue>"/"</defaultvalue>
+					<modifiers optional="false"/>
+				</attribute>
+				<attribute qualifier="username" type="java.lang.String">
+					<description>username for FTP</description>
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="password" type="java.lang.String">
+					<description>password for FTP</description>
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<!-- UI Item Types -->
+		<itemtype code="CelebrosCMSComponent"
+			jaloclass="com.celebros.jalo.components.CelebrosCMSComponent"
+			extends="SimpleCmsComponent" autocreate="true" generate="true"
+			abstract="true">
+			<attributes>
+				<attribute qualifier="celebrosEnabled" type="java.lang.Boolean">
+					<description>Are the celebros features of this component enabled</description>
+					<persistence type="property" />
+					<modifiers unique="false" optional="true" initial="false" />
+				</attribute>
+				<attribute qualifier="scriptServer" type="localized:java.lang.String">
+					<description>The host where the JS is located</description>
+					<persistence type="property" />
+					<modifiers unique="false" optional="true" />
+				</attribute>
+				<attribute qualifier="customerName" type="localized:java.lang.String">
+					<description>Customer Name to send to Celebros</description>
+					<persistence type="property" />
+					<modifiers unique="false" optional="true" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CelebrosListerComponent" abstract="false"
+			generate="true" extends="CelebrosCMSComponent" autocreate="true"
+			jaloclass="com.celebros.jalo.components.CelebrosListerComponent">
+			<attributes>
+				<attribute qualifier="cssClass" type="java.lang.String">
+					<description>cssClass for the div</description>
+					<persistence type="property" />
+					<modifiers unique="false" optional="true" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CelebrosAutocompleteComponent" abstract="false"
+			generate="true" extends="CelebrosCMSComponent" autocreate="true"
+			jaloclass="com.celebros.jalo.components.CelebrosAutocompleteComponent">
+			<attributes>
+				<attribute qualifier="frontendServer" type="localized:java.lang.String">
+					<description>Frontend Server to send to Celebros</description>
+					<persistence type="property" />
+					<modifiers unique="false" optional="true" />
+				</attribute>
+				<attribute qualifier="clientUI" type="localized:java.lang.String">
+					<description>ClientUI at Celebros to fetch css from</description>
+					<persistence type="property" />
+					<modifiers unique="false" optional="true" />
+				</attribute>
+				<attribute qualifier="formTarget" type="java.lang.String">
+					<description>Target for search form</description>
+					<persistence type="property" />
+					<modifiers unique="false" optional="true" />
+				</attribute>
+				<attribute qualifier="inputName" type="java.lang.String">
+					<description>Name of search text box</description>
+					<persistence type="property" />
+					<modifiers unique="false" optional="true" />
+				</attribute>
+				<attribute qualifier="inputCssClass" type="java.lang.String">
+					<description>Css class for search text box</description>
+					<persistence type="property" />
+					<modifiers unique="false" optional="true" />
+				</attribute>
+				<attribute qualifier="inputPlaceholder" type="localized:java.lang.String">
+					<description>Placeholder text for search text box</description>
+					<persistence type="property" />
+					<modifiers unique="false" optional="true" />
+				</attribute>
+				<attribute qualifier="buttonId" type="java.lang.String">
+					<description>ID of search button</description>
+					<persistence type="property" />
+					<modifiers unique="false" optional="true" />
+				</attribute>
+				<attribute qualifier="buttonCssClass" type="java.lang.String">
+					<description>Css class for search button</description>
+					<persistence type="property" />
+					<modifiers unique="false" optional="true" />
+				</attribute>
+			</attributes>
+		</itemtype>
+	</itemtypes>
+</items>

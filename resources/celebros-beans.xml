@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2015 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+
+<!--
+	ATTENTION: This is just an example file. You have to edit it according to your needs.
+-->
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="beans.xsd">
+
+	<bean class="com.celebros.data.CelebrosExportData">
+	    <property name="data" type="java.lang.String"/>
+	    <property name="filename" type="java.lang.String"/>
+	    <property name="table" type="java.lang.String"/>
+	</bean>
+
+	<bean class="com.celebros.data.CelebrosUploadData">
+	    <property name="remoteHost" type="java.lang.String"/>
+	    <property name="remotePort" type="java.lang.String"/>
+	    <property name="remoteLocation" type="java.lang.String"/>
+	    <property name="username" type="java.lang.String"/>
+	    <property name="password" type="java.lang.String"/>
+	    <property name="exports" type="java.util.List&lt;com.celebros.data.CelebrosExportData&gt;"/>
+	    <property name="zipFileName" type="java.lang.String"/>
+	</bean>
+	
+	<bean class="com.celebros.data.CelebrosProductStatusRequestData">
+	    <property name="siteID" type="String"/>
+		<property name="storeID" type="String"/>
+		<property name="productCodes" type="java.util.List&lt;String>"/>
+	</bean>
+	
+	<bean class="com.celebros.data.CelebrosProductStatusData">
+	    <property name="productCode" type="java.lang.String"/>
+	    <property name="stockLevel" type="java.lang.Integer"/>
+	    <property name="stockLevelStatus" type="java.lang.String"/>
+	    <property name="price" type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.PriceData>"/>
+	</bean>
+	    
+</beans>

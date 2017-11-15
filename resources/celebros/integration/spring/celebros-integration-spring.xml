@@ -1,0 +1,45 @@
+<beans:beans xmlns="http://www.springframework.org/schema/integration"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:oxm="http://www.springframework.org/schema/oxm"
+             xmlns:int-http="http://www.springframework.org/schema/integration/http"
+             xmlns:int-file="http://www.springframework.org/schema/integration/file"
+             xmlns:int-xml="http://www.springframework.org/schema/integration/xml"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+				http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm.xsd
+                http://www.springframework.org/schema/integration/http http://www.springframework.org/schema/integration/http/spring-integration-http.xsd
+                http://www.springframework.org/schema/integration/file http://www.springframework.org/schema/integration/file/spring-integration-file.xsd
+                http://www.springframework.org/schema/integration/xml http://www.springframework.org/schema/integration/xml/spring-integration-xml.xsd">
+            
+    <gateway id="celebrosGateway"
+             service-interface="com.celebros.gateway.CelebrosGateway">
+        <method name="saveExport" request-channel="saveExportPreHeaderChannel"/>
+        <method name="zipAndUpload" request-channel="zipAndUploadPreHeaderChannel"/>
+    </gateway>
+    
+    <channel id="saveExportPreHeaderChannel"/>
+    
+    <service-activator input-channel="saveExportPreHeaderChannel" output-channel="saveExportChannel"
+                   ref="celebrosExportService" method="generateFilename"/>
+    
+    <channel id="saveExportChannel"/>
+    
+    <int-file:outbound-channel-adapter directory="${celebros.index.export.dir}" auto-create-directory="true" channel="saveExportChannel" filename-generator-expression="headers.get('filename')"></int-file:outbound-channel-adapter>
+    
+    <channel id="zipAndUploadPreHeaderChannel"/>
+    
+    <header-enricher input-channel="zipAndUploadPreHeaderChannel" output-channel="zipAndUploadChannel">
+        <header name="filePath" value="${celebros.index.export.dir}"/>
+    </header-enricher>
+    
+    <channel id="zipAndUploadChannel"/>
+    
+    <service-activator input-channel="zipAndUploadChannel" output-channel="zipAndUploadChannelPostZip"
+                   ref="celebrosExportService" method="zipFiles"/>
+    
+    <channel id="zipAndUploadChannelPostZip"/>
+
+    <service-activator input-channel="zipAndUploadChannelPostZip" ref="celebrosExportService" method="uploadZip"/>
+    
+</beans:beans>

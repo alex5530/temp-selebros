@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- [y] hybris Platform Copyright (c) 2000-2015 hybris AG All rights reserved. 
+	This software is the confidential and proprietary information of hybris ("Confidential 
+	Information"). You shall not disclose such Confidential Information and shall 
+	use it only in accordance with the terms of the license agreement you entered 
+	into with hybris. -->
+<configuration xmlns="hybris.de/schemas/hmc/generic"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="hybris.de/schemas/hmc/generic hmc.xsd">
+
+
+	<!-- Configuration for extension celebros -->
+
+
+	<explorertree>
+		<group name="celebrosgroup">
+			<typeref type="CelebrosExportCronjob" description="nav.celebrosexportcronjob.description" />
+			<group name="celebrosUI">
+				<typeref type="CelebrosAutocompleteComponent"
+					description="nav.celebrosautocompletecomponent.description" />
+				<typeref type="CelebrosListerComponent" description="nav.celebroslistercomponent.description" />
+			</group>
+		</group>
+	</explorertree>
+
+	<type name="CelebrosExportCronjob" mode="append"
+		icon="ext/celebros/images/celebros.png">
+		<organizer mode="append">
+			<editor mode="append">
+				<tab name="tab.celebros" position="0">
+					<section name="section.celebros.attributes">
+						<listlayout>
+							<attribute name="site" />
+							<attribute name="baseUrl" />
+							<attribute name="imageBaseUrl" />
+							<attribute name="productType">
+								<customeditor
+									classname="com.celebros.hmc.CelebrosProductTypeSelectEditorChip" />
+							</attribute>
+							<attribute name="customAttributes" width="595">
+								<referencecollectioneditor editable="true"
+									externalcreate="false" resortable="false" remove="true" create="true">
+									<itemlayout>
+										<attribute name="attributeName" width="180"/>
+										<attribute name="lookupTable" width="120" />
+										<attribute name="localized" width="120" />
+										<attribute name="enabled" width="120" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+						</listlayout>
+					</section>
+					<section name="section.celebros.upload.attributes">
+						<listlayout>
+							<attribute name="remoteHost" />
+							<attribute name="remotePort" />
+							<attribute name="remoteLocation" />
+							<attribute name="username" />
+							<attribute name="password" />
+							<action type="item" classname="com.celebros.hmc.CelebrosTestFtpAction"
+								name="section.celebros.upload.ftptest" showtoolbarlabel="false"
+								hidebutton="false" />
+						</listlayout>
+					</section>
+				</tab>
+			</editor>
+		</organizer>
+	</type>
+
+	<type name="CelebrosIndexAttribute" mode="append"
+		icon="ext/celebros/images/celebros.png">
+		<organizer mode="append">
+			<result>
+				<editview mode="replace">
+					<itemlayout>
+						<attribute name="attributeName" width="180" />
+						<attribute name="lookupTable" width="120" />
+						<attribute name="enabled" width="120" />
+					</itemlayout>
+				</editview>
+			</result>
+			<editor mode="append">
+				<tab name="tab.celebros" position="0">
+					<section name="section.celebros.attributes">
+						<listlayout>
+							<attribute name="enabled" />
+							<attribute name="attributeName" />
+							<attribute name="lookupTable" />
+							<attribute name="valueProviderBean">
+								<customeditor
+									classname="de.hybris.platform.solrfacetsearch.hmc.FieldValueProviderSelectEditorChip"></customeditor>
+							</attribute>
+							<attribute name="valueProviderParameter" />
+							<attribute name="classAttributeAssignment" />
+						</listlayout>
+					</section>
+				</tab>
+			</editor>
+		</organizer>
+	</type>
+
+	<type name="CelebrosCMSComponent" mode="append">
+		<organizer mode="append">
+			<editor mode="append">
+				<tab name="tab.celebros" position="0">
+					<section name="section.celebros.attributes">
+						<listlayout>
+							<attribute name="celebrosEnabled" />
+							<attribute name="scriptServer" />
+							<attribute name="customerName" />
+						</listlayout>
+					</section>
+				</tab>
+			</editor>
+		</organizer>
+	</type>
+
+	<type name="CelebrosAutocompleteComponent" mode="append">
+		<organizer mode="append">
+			<editor mode="append">
+				<tab name="tab.celebros" position="0" mode="append">
+					<section name="section.celebros.attributes" mode="append">
+						<listlayout>
+							<attribute name="frontendServer" />
+							<attribute name="clientUI" />
+							<attribute name="formTarget" />
+							<attribute name="inputName" />
+							<attribute name="inputPlaceholder" />
+							<attribute name="inputCssClass" />
+							<attribute name="buttonId" />
+							<attribute name="buttonCssClass" />
+						</listlayout>
+					</section>
+				</tab>
+			</editor>
+		</organizer>
+	</type>
+
+	<type name="CelebrosListerComponent" mode="append">
+		<organizer mode="append">
+			<editor mode="append">
+				<tab name="tab.celebros" position="0" mode="append">
+					<section name="section.celebros.attributes" mode="append">
+						<listlayout>
+							<attribute name="cssClass" />
+						</listlayout>
+					</section>
+				</tab>
+			</editor>
+		</organizer>
+	</type>
+
+</configuration>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- [y] hybris Platform Copyright (c) 2000-2015 hybris AG All rights reserved. 
+	This software is the confidential and proprietary information of hybris ("Confidential 
+	Information"). You shall not disclose such Confidential Information and shall 
+	use it only in accordance with the terms of the license agreement you entered 
+	into with hybris. -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <import resource="celebros/integration/spring/celebros-integration-spring.xml"/>
+    
+    <bean id="celebrosInitialSetup" class="com.celebros.setup.InitialDataSystemSetup" parent="abstractCoreSystemSetup"/>
+    
+	<bean id="celebrosCoreDataImportedEventListener" parent="abstractCoreDataImportedEventListener">
+		<property name="supportedChannels">
+			<list value-type="de.hybris.platform.commerceservices.enums.SiteChannel">
+				<value>B2C</value>
+				<!-- <value>B2B</value> -->
+			</list>
+		</property>
+		<property name="addonExtensionMetadata">
+			<bean class="de.hybris.platform.addonsupport.data.AddonExtensionMetadata">
+				<property name="suffixChannel" value="false" />
+				<property name="baseExtensionName" value="celebros" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="celebrosExportService" class="com.celebros.service.impl.DefaultCelebrosExportService">
+		<property name="categoryService" ref="categoryService" />
+		<property name="productModelUrlResolver" ref="productModelUrlResolver"/>
+		<property name="typeService" ref="typeService"/>
+		<property name="celebrosProductDao" ref="celebrosProductDao"/>
+	</bean>
+
+	<bean id="celebrosExportJobPerformable" class="com.celebros.job.CelebrosExportJobPerformable"
+		parent="abstractJobPerformable">
+		<property name="celebrosExportService" ref="celebrosExportService" />
+		<property name="celebrosGateway" ref="celebrosGateway"/>
+		<property name="mandatoryValueProviders">
+		    <map>
+		        <entry key="id" value-ref="celebrosProductIdValueProvider"/>
+		        <entry key="title" value-ref="celebrosProductTitleValueProvider"/>
+		        <entry key="price" value-ref="celebrosProductPriceValueProvider"/>
+		        <entry key="link" value-ref="productUrlValueProvider"/>
+		        <entry key="imageURL" value-ref="celebrosImageLinkValueProvider"/>
+		        <entry key="category" value-ref="celebrosCategoryValueProvider"/>
+		        <entry key="description" value-ref="celebrosProductDescriptionValueProvider"/>
+		        <entry key="parentProduct" value-ref="celebrosParentProductValueProvider"/>
+		    </map>
+		</property>
+	</bean>
+	
+	<bean id="celebrosProductIdValueProvider" class="com.celebros.valueprovider.impl.CelebrosModelAttributeValueProvider">
+	    <property name="attributeName" value="code"/>
+	</bean>
+	
+	<bean id="celebrosProductTitleValueProvider" class="com.celebros.valueprovider.impl.CelebrosLocalizedAttributeValueProvider">
+	    <property name="attributeName" value="name"/>
+	</bean>
+	
+	<bean id="celebrosProductLinkValueProvider" class="com.celebros.valueprovider.impl.CelebrosProductLinkValueProvider">
+	    <property name="celebrosExportService" ref="celebrosExportService" />
+	</bean>
+	
+	<bean id="celebrosImageLinkValueProvider" class="com.celebros.valueprovider.impl.CelebrosImageLinkValueProvider">
+	    <property name="celebrosExportService" ref="celebrosExportService" />
+	</bean>
+	
+	<bean id="celebrosCategoryValueProvider" class="com.celebros.valueprovider.impl.CelebrosCategoryValueProvider"/>
+	
+	<bean id="celebrosProductDescriptionValueProvider" class="com.celebros.valueprovider.impl.CelebrosLocalizedAttributeValueProvider">
+	    <property name="attributeName" value="description"/>
+	</bean>
+	
+	<bean id="celebrosProductPriceValueProvider" class="com.celebros.valueprovider.impl.CelebrosProductPriceValueProvider"
+		parent="productPriceValueProvider"/>
+	
+	<bean id="celebrosParentProductValueProvider" class="com.celebros.valueprovider.impl.CelebrosParentProductValueProvider"/>
+	
+	<bean id="celebrosWebserviceHelper" class="com.celebros.helper.impl.DefaultCelebrosWebserviceHelper">
+	    <property name="stockService" ref="stockService"/>
+	    <property name="priceService" ref="priceService"/>
+	    <property name="impersonationService" ref="impersonationService"/>
+	    <property name="priceDataFactory" ref="priceDataFactory"/>
+	</bean>
+	
+	<bean id="celebrosProductDao" class="com.celebros.dao.impl.CelebrosProductDao">
+		<property name="flexibleSearchService" ref="flexibleSearchService"/>
+		<constructor-arg value="Product"/>
+	</bean>
+
+	<alias name="defaultCelebrosSearchFacade" alias="productSearchFacade"/>
+	<bean id="defaultCelebrosSearchFacade" class="com.celebros.facades.DefaultCelebrosProductSearchFacade" parent="rtDefaultProductSearchFacade" autowire-candidate="true" primary="true">
+		<property name="threadContextService" ref="threadContextService"/>
+	</bean>
+
+</beans>

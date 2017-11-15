@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editor>	
+	<group qualifier="Celebros" visible="true" initially-opened="true">
+		<label key="cockpit.config.label.Celebros" />
+		<property qualifier="AbstractCMSComponent.visible"/>
+		<property qualifier="CelebrosCMSComponent.celebrosEnabled"/>
+		<property qualifier="CelebrosCMSComponent.scriptServer"/>
+		<property qualifier="CelebrosCMSComponent.customerName"/>
+		<property qualifier="CelebrosListerComponent.cssClass"/>
+	</group>
+</editor>

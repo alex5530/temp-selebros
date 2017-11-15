@@ -1,0 +1,9 @@
+$contentCatalog=electronicsContentCatalog
+$contentCatalogVersion=catalogVersion(catalog(id[default=$contentCatalog]),version[default='Online'])[unique=true]
+
+INSERT_UPDATE CelebrosListerComponent; uid[unique=true]           ; cssClass; celebrosEnabled; scriptServer               ; customerName; name                            ; $contentCatalogVersion
+                                     ; CelebrosListerComponentTest; "lister"; true           ; "uitemplatev3.celebros.com"; "RSupply"   ; "Celebros Lister Component Test"
+
+INSERT_UPDATE CelebrosAutocompleteComponent; uid[unique=true]                 ; frontendServer           ; clientUI                   ; formTarget                                              ; inputName; inputCssClass; inputPlaceholder             ; buttonId; buttonCssClass ; celebrosEnabled; scriptServer             ; customerName; name                                  ; $contentCatalogVersion
+                                           ; CelebrosAutocompleteComponentTest; "RSupply-ac.celebros.com"; "uitemplatev3.celebros.com"; "https://localhost:9002/yacceleratorstorefront/celebros"; "q"      ; "input-text" ; "Search entire store here...";         ; "action search"; true           ; "RSupply-ac.celebros.com"; "RSupply"   ; "Celebros Autocomplete Component Test"
+

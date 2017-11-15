@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- [y] hybris Platform Copyright (c) 2000-2015 hybris AG All rights reserved. 
+	This software is the confidential and proprietary information of hybris ("Confidential 
+	Information"). You shall not disclose such Confidential Information and shall 
+	use it only in accordance with the terms of the license agreement you entered 
+	into with hybris. -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.1.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
+ 
+    <context:component-scan base-package="com.celebros.controllers" scope-resolver="de.hybris.platform.spring.IgnoreTenantScopeMetadataResolver" />
+
+	
+	<!-- Expose /acceleratoraddon/web/webroot/WEB-INF/messages/base.js.properties 
+		resource bundle as javascript variables 
+	<bean id="defaultCelebrosJavaScriptMessageResourceAccessor"
+		parent="abstractJavaScriptMessageResourceAccessor">
+		<property name="addOnName" value="celebros" />
+	</bean>
+
+	<bean id="defaultCelebrosBeforeViewJsPropsHandlerAdaptee" parent="abstractBeforeViewJsPropsHandlerAdaptee"
+		class="de.hybris.platform.addonsupport.interceptors.ExportJsPropertiesBeforeViewHandler">
+		<property name="messageSource"
+			ref="defaultCelebrosJavaScriptMessageResourceAccessor" />
+	</bean>
+
+	<bean id="getCelebrosBeforeViewHandler" parent="beforeViewHandlerAdapter">
+		<property name="adaptee">
+			<ref bean="defaultCelebrosBeforeViewJsPropsHandlerAdaptee" />
+		</property>
+	</bean>
+	<bean id="CelebrosBeforeViewHandlerListMergeDirective" depends-on="beforeViewHandlersList"
+		parent="listMergeDirective">
+		<property name="add" ref="getCelebrosBeforeViewHandler" />
+	</bean>-->
+
+	<bean id="celebrosListerComponentRenderer" class="com.celebros.component.renderer.impl.CelebrosListerComponentRenderer" parent="addOnJspIncludeCMSComponentRenderer" />
+	<bean id="celebrosAutocompleteComponentRenderer" class="com.celebros.component.renderer.impl.CelebrosAutocompleteComponentRenderer" parent="addOnJspIncludeCMSComponentRenderer"/>
+	
+	<bean id="celebrosListerComponentRendererMapping" parent="addonCmsComponentRendererMapping">
+		<property name="typeCode" value="CelebrosListerComponent" />
+		<property name="renderer" ref="celebrosListerComponentRenderer" />
+	</bean>
+	
+	<bean id="celebrosAutocompleteComponentRendererMapping" parent="addonCmsComponentRendererMapping">
+		<property name="typeCode" value="CelebrosAutocompleteComponent" />
+		<property name="renderer" ref="celebrosAutocompleteComponentRenderer" />
+	</bean>
+
+</beans>

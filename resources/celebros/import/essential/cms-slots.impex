@@ -1,0 +1,12 @@
+INSERT_UPDATE ComponentTypeGroups2ComponentType;source(code)[unique=true];target(code)[unique=true]
+;wide;CelebrosListerComponent
+;mobile;CelebrosListerComponent
+;logo;CelebrosAutocompleteComponent
+;headerlinks;CelebrosAutocompleteComponent
+;searchbox;CelebrosAutocompleteComponent
+;minicart;CelebrosAutocompleteComponent
+;wide;CelebrosAutocompleteComponent
+;narrow;CelebrosAutocompleteComponent
+;footer;CelebrosAutocompleteComponent
+;navigation;CelebrosAutocompleteComponent
+;mobile;CelebrosAutocompleteComponent
