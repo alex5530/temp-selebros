@@ -1,9 +1,9 @@
 package com.celebros.facades;
 
-import JavaSearchAPI.QwiserProduct;
-import JavaSearchAPI.QwiserProducts;
-import JavaSearchAPI.QwiserSearchAPI;
-import JavaSearchAPI.QwiserSearchResults;
+import JavaSearchAPI.*;
+import com.celebros.service.CelebrosSearchService;
+import com.ramtool.core.service.celebros.CelebrosSearchInfo;
+import com.ramtool.core.service.celebros.CelebrosSessionFlowService;
 import com.ramtool.facades.search.impl.RTDefaultProductSearchFacade;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
@@ -14,16 +14,28 @@ import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearc
 import de.hybris.platform.commerceservices.search.facetdata.ProductSearchPageData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.threadcontext.ThreadContextService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
+import org.apache.log4j.Logger;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
+
 import java.util.List;
+
+import static com.ramtool.core.service.celebros.CelebrosSearchInfo.SearchType.REFINE;
+import static com.ramtool.core.service.celebros.CelebrosSearchInfo.SearchType.SIMPLE;
 
 /**
  * Created by user on 14.11.17.
  */
 public class DefaultCelebrosProductSearchFacade<ITEM extends ProductData> extends RTDefaultProductSearchFacade {
+
+    Logger LOG = Logger.getLogger(DefaultCelebrosProductSearchFacade.class);
+
+    @Autowired
+    private CelebrosSearchService celebrosSearchService;
+
+    @Autowired
+    private CelebrosSessionFlowService celebrosSessionFlowService;
 
     private ThreadContextService threadContextService;
 
@@ -41,38 +53,30 @@ public class DefaultCelebrosProductSearchFacade<ITEM extends ProductData> extend
     @Override
     public ProductSearchPageData textSearch(String text) {
 
-        ProductSearchPageData productSearchPageData = new ProductSearchPageData();
-        ArrayList<QwiserProduct> qwiserProductList = new ArrayList<>();
-        ProductData productData = new ProductData();
-        PriceData priceData = new PriceData();
-        List<ProductData> list = new ArrayList<>();
+        CelebrosSearchInfo searchInfo = celebrosSessionFlowService.getCelebresSearchFlow();
+        ProductSearchPageData productSearchPageData = celebrosSearchService.search(text, searchInfo);
 
-        priceData.setValue(new BigDecimal(6.04));
-        priceData.setCurrencyIso("USD");
-        productData.setName("Product name");
-        productData.setPrice(priceData);
-        productData.setImages(null);
-        list.add(productData);
-        productSearchPageData.setResults(list);
-
-        try
-        {
-            QwiserSearchAPI api = new QwiserSearchAPI("RamTool", "usdev-search.celebros.com",6035);
-            QwiserSearchResults searchResults = api.Search("some");
-            QwiserProducts qwiserProducts = searchResults.Products();
-            QwiserProduct prod = qwiserProducts.getProduct(0);
-            String name = prod.GetField("Title"); // Price,Link the same
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        celebrosSessionFlowService.save(searchInfo);
 
         return productSearchPageData;
     }
 
     @Override
     public ProductSearchPageData textSearch(SearchStateData searchState, PageableData pageableData) {
-        return null;
+
+        CelebrosSearchInfo searchInfo = celebrosSessionFlowService.getCelebresSearchFlow();
+
+//        return celebrosSearchService.advancedSearch(searchState.getQuery().getValue(), "", "", EnumAnswerInSearchPath.getEnumAnswerInSearchPath(0), "", "66", "", "0", "");
+//        return celebrosSearchService.advancedSearch(searchInfo.getSearchText(), "", "", EnumAnswerInSearchPath.getEnumAnswerInSearchPath(0), "", Integer.toString(searchInfo.getNumberPerPage()), searchInfo.getSortCode(), Integer.toString(searchInfo.getPage()), "", searchInfo);
+
+        if (searchInfo.getSearchType().equals(REFINE)){
+            return celebrosSearchService.refineSearch(searchInfo);
+        }
+
+        ProductSearchPageData productSearchPageData = celebrosSearchService.search(searchInfo.getSearchText(), searchInfo);
+        celebrosSessionFlowService.save(searchInfo);
+        return productSearchPageData;
+
     }
 
     @Override
@@ -87,6 +91,7 @@ public class DefaultCelebrosProductSearchFacade<ITEM extends ProductData> extend
 
     @Override
     public List<AutocompleteSuggestionData> getAutocompleteSuggestions(String input) {
-        return null;
+
+        return celebrosSearchService.getAutocompleteSuggestionData(input);
     }
 }

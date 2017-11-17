@@ -100,4 +100,6 @@
 		<property name="threadContextService" ref="threadContextService"/>
 	</bean>
 
+	<bean id="selebrosSearchService" class="com.celebros.service.impl.CelebrosSearchServiceImpl" autowire="byName"/>
+
 </beans>
